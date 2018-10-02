@@ -1,16 +1,9 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import TVShow from './TVShow'
 
 class ManagePage extends Component {
-    static propTypes = {
-        tvShows: PropTypes.array.isRequired,
-        tvShow: PropTypes.object.isRequired,
-        tvShowDeleted: PropTypes.func.isRequired,
-        saveTVShow: PropTypes.func.isRequired
-    }
-
     state = {
+        tvShows: [],
         nameInProgress: '',
         ratingInProgress: '',
         imageUrlInProgress: 'https://caterville.files.wordpress.com/2013/10/fe0c8-pizza-cat.jpg'
@@ -53,15 +46,40 @@ class ManagePage extends Component {
             imageUrlInProgress: ''
         })
 
-        this.props.saveTVShow({
+        this.postTVShow({
             name: this.state.nameInProgress,
             rating: Number(this.state.ratingInProgress),
             imageUrl: this.state.imageUrlInProgress
         })
     }
 
+
+    getTVShows = () => {
+        return fetch('http://localhost:3003/tv-show')
+            .then(res => res.json())
+            .then(tvShows => this.setState({ tvShows, err: null }))
+            .catch(err => this.setState({ err }))
+    }
+
+    postTVShow = (tvShow) => {
+        console.log(tvShow)
+        return fetch('http://localhost:3003/tv-show', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+            body: JSON.stringify(tvShow)
+        })
+            .then(this.getTVShows)
+    }
+
+    componentDidMount = () => {
+        this.getTVShows()
+    }
+
     renderTVShows = () => {
-        return this.props.tvShows.map(
+        return this.state.tvShows.map(
             (tvShow, i) => {
                 return (
                     <TVShow key={i} name={tvShow.name} allowDelete={true} selectHandler={this.tvShowSelected} deleteHandler={this.tvShowDeleted} />
@@ -70,9 +88,17 @@ class ManagePage extends Component {
         )
     }
 
+    renderError = () => {
+        if (this.state.err) {
+            console.log(this.state.err)
+            return (<div>Sorry, there was an error.</div>)
+        }
+    }
+
     render() {
         return (
             <main>
+                {this.renderError()}
                 <section>
                     <h2>Shows</h2>
                     {this.renderTVShows()}

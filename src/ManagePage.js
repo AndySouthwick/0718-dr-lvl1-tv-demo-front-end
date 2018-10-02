@@ -9,6 +9,8 @@ class ManagePage extends Component {
         imageUrlInProgress: 'https://caterville.files.wordpress.com/2013/10/fe0c8-pizza-cat.jpg'
     }
 
+    rootUrl = 'http://localhost:3003/tv-show'
+
     handleNameChange = (event) => {
         this.setState({
             nameInProgress: event.target.value
@@ -54,24 +56,30 @@ class ManagePage extends Component {
     }
 
 
-    getTVShows = () => {
-        return fetch('http://localhost:3003/tv-show')
-            .then(res => res.json())
-            .then(tvShows => this.setState({ tvShows, err: null }))
-            .catch(err => this.setState({ err }))
+    getTVShows = async () => {
+        try {
+            const res = await fetch(this.rootUrl)
+            const tvShows = await res.json()
+            this.setState({ tvShows, err: null })
+        } catch (err) {
+            this.setState({ err })
+        }
     }
 
-    postTVShow = (tvShow) => {
-        console.log(tvShow)
-        return fetch('http://localhost:3003/tv-show', {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-            },
-            body: JSON.stringify(tvShow)
-        })
-            .then(this.getTVShows)
+    postTVShow = async (tvShow) => {
+        try {
+            await fetch(this.rootUrl, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify(tvShow)
+            })
+        } catch (err) {
+            this.setState({ err })
+        }
+        await this.getTVShows()
     }
 
     componentDidMount = () => {

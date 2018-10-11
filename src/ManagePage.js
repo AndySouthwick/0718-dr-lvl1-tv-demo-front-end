@@ -52,7 +52,7 @@ class ManagePage extends Component {
 
     getTVShows = async () => {
         try {
-            const res = await fetch(this.rootUrl)
+            const res = await fetch(`${this.rootUrl}/tv-show`)
             const tvShows = await res.json()
             this.setState({ tvShows, err: null })
         } catch (err) {
@@ -62,7 +62,7 @@ class ManagePage extends Component {
 
     postTVShow = async (tvShow) => {
         try {
-            const response = await fetch(this.rootUrl, {
+            const response = await fetch(`${this.rootUrl}/tv-show`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {

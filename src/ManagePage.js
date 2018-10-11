@@ -89,6 +89,7 @@ class ManagePage extends Component {
     }
 
     componentDidMount = () => {
+        console.log(process, process.env, process.env, process.env.apiRoot)
         this.getTVShows()
     }
 

@@ -45,6 +45,8 @@ class App extends Component {
     return (<PreviewPage tvShows={this.state.tvShows} tvShow={this.state.tvShow} />)
   }
 
+  componentDidMount = () => console.log('App Loaded')
+
   render() {
     return (
       <Router>

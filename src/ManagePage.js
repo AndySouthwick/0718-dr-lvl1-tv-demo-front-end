@@ -9,7 +9,7 @@ class ManagePage extends Component {
         imageUrlInProgress: 'https://caterville.files.wordpress.com/2013/10/fe0c8-pizza-cat.jpg'
     }
 
-    rootUrl = process.env.apiRoot || 'http://localhost:3003/tv-show'
+    rootUrl = process.env.REACT_APP_API_ROOT || 'http://localhost:3003/tv-show'
 
     handleNameChange = (event) => {
         this.setState({
@@ -89,7 +89,7 @@ class ManagePage extends Component {
     }
 
     componentDidMount = () => {
-        console.log(process, process.env, process.env, process.env.apiRoot)
+        console.log(process, process.env, process.env, process.env.REACT_APP_API_ROOT)
         this.getTVShows()
     }
 

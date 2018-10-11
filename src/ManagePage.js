@@ -42,12 +42,6 @@ class ManagePage extends Component {
     }
 
     saveTVShow = () => {
-        this.setState({
-            nameInProgress: '',
-            ratingInProgress: '',
-            imageUrlInProgress: ''
-        })
-
         this.postTVShow({
             name: this.state.nameInProgress,
             rating: Number(this.state.ratingInProgress),
@@ -68,7 +62,7 @@ class ManagePage extends Component {
 
     postTVShow = async (tvShow) => {
         try {
-            await fetch(this.rootUrl, {
+            const response = await fetch(this.rootUrl, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
@@ -76,10 +70,22 @@ class ManagePage extends Component {
                 },
                 body: JSON.stringify(tvShow)
             })
+
+            const result = await response.json()
+            if (result.isJoi) {
+                throw result
+            }
+
+            this.setState({
+                nameInProgress: '',
+                ratingInProgress: '',
+                imageUrlInProgress: ''
+            })
+
+            await this.getTVShows()
         } catch (err) {
             this.setState({ err })
         }
-        await this.getTVShows()
     }
 
     componentDidMount = () => {
@@ -97,9 +103,13 @@ class ManagePage extends Component {
     }
 
     renderError = () => {
-        if (this.state.err) {
-            console.log(this.state.err)
-            return (<div>Sorry, there was an error.</div>)
+        const error = this.state.err
+        if (error) {
+            const message = error.isJoi
+                ? error.details.map(d => (<div>{d.message}</div>))
+                : 'Sorry, there was an error.'
+
+            return (<div>{message}</div>)
         }
     }
 

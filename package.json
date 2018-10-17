@@ -9,7 +9,6 @@
     "react-scripts": "1.1.5"
   },
   "scripts": {
-    "start": "node ./node_modules/react-scripts/scripts/start.js",
     "react": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
